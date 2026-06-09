@@ -1,0 +1,16 @@
+{
+  "name": "opencode-agent-memory",
+  "version": "0.1.0",
+  "description": "OpenCode MCP plugin for agent memory service",
+  "type": "module",
+  "main": "index.mjs",
+  "bin": {
+    "opencode-agent-memory": "./index.mjs"
+  },
+  "keywords": ["opencode", "mcp", "agent", "memory"],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "js-yaml": "^4.1.0"
+  }
+}
