@@ -6,6 +6,23 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import yaml from "js-yaml";
+import { installSkills } from "./scripts/install-skills.mjs";
+
+// Auto-bootstrap bundled skills on MCP server startup.
+// Idempotent: no-op when files already match. Silent on success to keep stdio
+// clean for the MCP protocol; errors go to stderr.
+try {
+  const result = installSkills({ silent: true });
+  if (result && (result.installed > 0 || result.updated > 0)) {
+    process.stderr.write(
+      `[opencode-agent-memory] skills synced: ${result.installed} new, ${result.updated} updated\n`,
+    );
+  }
+} catch (e) {
+  process.stderr.write(
+    `[opencode-agent-memory] skill bootstrap failed (non-fatal): ${e.message}\n`,
+  );
+}
 
 function loadWorkstationConfig() {
   const p = path.join(os.homedir(), ".agent-memory", "config.yaml");
