@@ -100,9 +100,9 @@ const server = new McpServer({ name: "opencode-agent-memory", version: "0.1.0" }
 
 server.tool(
   "save_memory",
-  "Save a memory (decision, note, architecture, known_issue, etc.) to the agent memory service.",
+  "Save a memory (decision, note, architecture, known_issue, idea, skill, agent, prompt_pattern, etc.) to the agent memory service.",
   {
-    type: z.enum(["decision", "session_summary", "architecture", "runbook", "known_issue", "task", "preference", "note"]),
+    type: z.enum(["decision", "session_summary", "architecture", "runbook", "known_issue", "task", "preference", "note", "idea", "skill", "agent", "prompt_pattern"]),
     title: z.string().min(1).max(200),
     body: z.string().min(1),
     tags: z.array(z.string()).optional(),
@@ -142,7 +142,7 @@ server.tool(
   "Search agent memories for the current org/project. Returns relevant decisions, notes, architecture, issues.",
   {
     q: z.string().min(1),
-    type: z.enum(["decision", "session_summary", "architecture", "runbook", "known_issue", "task", "preference", "note"]).optional(),
+    type: z.enum(["decision", "session_summary", "architecture", "runbook", "known_issue", "task", "preference", "note", "idea", "skill", "agent", "prompt_pattern"]).optional(),
     project: z.string().optional(),
     repo: z.string().optional(),
     limit: z.number().int().positive().max(20).optional(),
