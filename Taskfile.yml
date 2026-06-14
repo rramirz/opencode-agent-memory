@@ -1,0 +1,29 @@
+version: '3'
+
+tasks:
+  update:
+    desc: Install/update this OpenCode MCP plugin globally and sync bundled skills
+    cmds:
+      - npm install -g .
+      - node scripts/install-skills.mjs
+
+  install:global:
+    desc: Install/update this OpenCode MCP plugin globally from local checkout
+    cmds:
+      - npm install -g .
+
+  install:github:
+    desc: Install/update this OpenCode MCP plugin globally from GitHub
+    cmds:
+      - npm install -g github:rramirz/opencode-agent-memory
+
+  install:skills:
+    desc: Sync bundled OpenCode skills into ~/.config/opencode/skill
+    cmds:
+      - node scripts/install-skills.mjs
+
+  check:
+    desc: Syntax-check the MCP plugin and skill installer
+    cmds:
+      - node --check index.mjs
+      - node --check scripts/install-skills.mjs
