@@ -20,10 +20,10 @@ The plugin ships OpenCode skills and self-installs them into `~/.config/opencode
 |---|---|
 | `reflect` | Review sessions since the last reflection and propose cross-org "core personality" memories worth saving so every agent on every org can learn from them. Uses `save_memory(core=true)`. Invoked manually via "reflect" or `/reflect`. |
 
-Two install paths, both idempotent (matching files are left untouched, stale ones are rewritten):
+Install paths, both idempotent (matching files are left untouched, stale ones are rewritten):
 
-1. **npm postinstall** runs `scripts/install-skills.mjs` after `npm install -g`. npm 11+ blocks install scripts by default (path 2 covers that case).
-2. **MCP server bootstrap**: every time OpenCode launches the MCP server, `index.mjs` re-syncs the bundled skills on startup. This guarantees the skill is installed/updated even when npm script execution is blocked. Cost is one `stat` per bundled skill per session.
+1. **MCP server bootstrap**: every time OpenCode launches the MCP server, `index.mjs` re-syncs bundled skills on startup. This guarantees the skill is installed/updated without relying on npm lifecycle scripts. Cost is one `stat` per bundled skill per session.
+2. **Manual fallback**: run `node scripts/install-skills.mjs` from the package checkout if you want to force a local skill sync.
 
 Skip both paths with `OPENCODE_AGENT_MEMORY_SKIP_SKILLS=1`.
 
