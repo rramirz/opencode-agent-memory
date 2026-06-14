@@ -3,7 +3,7 @@
 // Idempotent. Safe to re-run. Skip via OPENCODE_AGENT_MEMORY_SKIP_SKILLS=1.
 //
 // Used two ways:
-//   1. CLI / npm postinstall: `node scripts/install-skills.mjs` (verbose, stdout)
+//   1. CLI/manual: `node scripts/install-skills.mjs` (verbose, stdout)
 //   2. Imported by index.mjs on MCP server startup (silent on no-op)
 
 import fs from "fs";
@@ -82,7 +82,7 @@ export function installSkills({ silent = false } = {}) {
   return { installed, updated, unchanged, skipped: false };
 }
 
-// Run as CLI when invoked directly (postinstall path).
+// Run as CLI when invoked directly (manual install path).
 const invokedPath = process.argv[1] ? fs.realpathSync(process.argv[1]) : "";
 const thisPath = fileURLToPath(import.meta.url);
 if (invokedPath === thisPath) {
