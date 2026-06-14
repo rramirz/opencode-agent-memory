@@ -100,7 +100,7 @@ const server = new McpServer({ name: "opencode-agent-memory", version: "0.1.0" }
 
 server.tool(
   "save_memory",
-  "Save a memory (decision, note, architecture, known_issue, idea, skill, agent, prompt_pattern, etc.) to the agent memory service.",
+  "Save a memory (decision, note, architecture, known_issue, idea, skill, agent, prompt_pattern, etc.) to the agent memory service. Set core=true to write a foundational 'personality' memory to the shared cross-org core namespace (this is what /reflect uses).",
   {
     type: z.enum(["decision", "session_summary", "architecture", "runbook", "known_issue", "task", "preference", "note", "idea", "skill", "agent", "prompt_pattern"]),
     title: z.string().min(1).max(200),
@@ -108,17 +108,18 @@ server.tool(
     tags: z.array(z.string()).optional(),
     importance: z.number().int().min(1).max(10).optional(),
     scope: z.enum(["global", "org", "project", "repo", "session"]).optional(),
+    core: z.boolean().optional(),
   },
-  async ({ type, title, body, tags, importance, scope }) => {
+  async ({ type, title, body, tags, importance, scope, core }) => {
     const { error, ws, token, repo, apiURL } = configCheck();
     if (error) return text(`Error: ${error}`);
 
     const payload = {
-      org: repo?.org || ws.default_org,
-      project: repo?.project || "",
-      repo: repo?.repo || "",
+      org: core ? "core" : repo?.org || ws.default_org,
+      project: core ? "" : repo?.project || "",
+      repo: core ? "" : repo?.repo || "",
       workstation: ws.workstation || "",
-      scope: scope || "repo",
+      scope: core ? "global" : scope || "repo",
       type,
       title,
       body,
@@ -139,24 +140,25 @@ server.tool(
 
 server.tool(
   "search_memory",
-  "Search agent memories for the current org/project. Returns relevant decisions, notes, architecture, issues.",
+  "Search agent memories for the current org/project. Returns relevant decisions, notes, architecture, issues. Set core=true to search the shared core 'personality' namespace instead of the repo's org.",
   {
     q: z.string().min(1),
     type: z.enum(["decision", "session_summary", "architecture", "runbook", "known_issue", "task", "preference", "note", "idea", "skill", "agent", "prompt_pattern"]).optional(),
     project: z.string().optional(),
     repo: z.string().optional(),
     limit: z.number().int().positive().max(20).optional(),
+    core: z.boolean().optional(),
   },
-  async ({ q, type, project, repo, limit }) => {
+  async ({ q, type, project, repo, limit, core }) => {
     const { error, ws, token, repo: repoCfg, apiURL } = configCheck();
     if (error) return text(`Error: ${error}`);
 
     const params = {
-      org: repoCfg?.org || ws.default_org,
+      org: core ? "core" : repoCfg?.org || ws.default_org,
       q,
       type,
-      project: project || repoCfg?.project,
-      repo: repo || repoCfg?.repo,
+      project: core ? undefined : project || repoCfg?.project,
+      repo: core ? undefined : repo || repoCfg?.repo,
       limit: limit ? String(limit) : "10",
     };
 

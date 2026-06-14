@@ -6,9 +6,9 @@ OpenCode MCP plugin for [agent-memory](https://github.com/rramirz/agent-memory).
 
 | Tool | Description |
 |---|---|
-| `save_memory` | Save a decision, note, architecture entry, etc. to memory API |
-| `search_memory` | Search memories for current org/project |
-| `sync_memory` | Pull context from API and write to `docs/ai/` |
+| `save_memory` | Save a decision, note, architecture entry, etc. to memory API. Pass `core: true` to write a shared "personality" memory to the cross-org `core` namespace |
+| `search_memory` | Search memories for current org/project. Pass `core: true` to search the shared `core` namespace |
+| `sync_memory` | Pull context from API and write to `docs/ai/` (always includes `core.md`) |
 
 All tools are manual-only. Nothing auto-injects. Service outages are fail-open: `save_memory` queues writes to `~/.agent-memory/outbox/` if the API is unreachable.
 
